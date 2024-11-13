@@ -132,7 +132,7 @@ def process_data_us_influence():            #Process the data and return the Dat
 
     for index, row in df_movies_merge.iterrows():
         count = row['us_terms_count']
-        countries = row['countries'].values()
+        countries = row['countries']
         for country in countries:
             if country not in country_term_counts:
                 country_term_counts[country] = 0
@@ -144,7 +144,7 @@ def process_data_us_influence():            #Process the data and return the Dat
     country_movie_count = {}
 
     for index, row in df_movies_merge.iterrows():
-        countries = row['countries'].values()
+        countries = row['countries']
         for country in countries:
             if country not in country_movie_count:
                 country_movie_count[country] = 1
@@ -180,14 +180,9 @@ def process_data_character():
     # Merge the previous DataFrame with df_movies
     df_character_influence = pd.merge(df_character_cluster, df_movies, on='wiki_id', how='inner')
     
-    # Function to extract countries 
-    def extract_countries(country_str):
-        countries = [entry.split(": ")[1].strip("}") for entry in country_str.split(", ") if ": " in entry]
-        return countries
-    
+    # Convert the 'countries' column to a list
+    df_character_influence['countries'] = df_character_influence['countries'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) and x.startswith('[') else x)
 
-    df_character_influence['countries'] = df_character_influence['countries'].apply(lambda x: extract_countries(x))
-    
     # Sort the data by cluster and release date to get the first appearance of each character
     df_sorted_character = df_character_influence.sort_values(by=['cluster', 'release_date_x'])
     df_first_appearance = df_sorted_character.groupby('cluster').first().reset_index()
@@ -196,7 +191,7 @@ def process_data_character():
     df_first_appearance = df_first_appearance[['cluster', 'character_actor_freebase_id', 'name_x', 'name_y', 'release_date_x', 'countries']]
     
     # Extract all the countries where the characters appeared
-    all_countries = df_character_influence.groupby('cluster')['countries'].apply(lambda x: list(set([item for sublist in x for item in sublist]))).reset_index()
+    all_countries = df_character_influence.groupby('cluster')['countries'].apply(lambda x: list({country for countries_list in x for country in countries_list if isinstance(country, str)})).reset_index()
     
     df_first_appearance_tot = pd.merge(df_first_appearance, all_countries, on='cluster', how='left')
 
