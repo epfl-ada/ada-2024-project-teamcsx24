@@ -35,7 +35,7 @@ print('Inflation data successfully processed')
 # --- Data saving ---
 
 def save_dataset(df, filename):
-    file_path = f'../../data/cleanData/{filename}.csv'
+    file_path = f'data/cleanData/{filename}.csv'
     df.to_csv(file_path, index=False)
     print(f"Saved {filename} to {file_path}")
 
