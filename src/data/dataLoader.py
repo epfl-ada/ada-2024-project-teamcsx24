@@ -7,7 +7,7 @@ def loadDataframe(name, path_to_directory):
         df['release_date'] = pd.to_datetime(df['release_date'])
         
         columns_to_convert = ['genres','languages','countries']
-        df[columns_to_convert] = df[columns_to_convert].apply(eval)
+        df[columns_to_convert] = df[columns_to_convert].applymap(eval)
 
         return df
     
