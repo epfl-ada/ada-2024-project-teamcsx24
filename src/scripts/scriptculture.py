@@ -156,7 +156,7 @@ def process_data_us_influence():            #Process the data and return the Dat
     country_us_influence_df = pd.merge(country_terms_count_df, country_movie_count_df)
 
     # Calculate a ratio of us term and log transformation
-    country_us_influence_df['ratio'] = country_us_influence_df['US_Term_Count'] / country_us_influence_df['Number of movies']
+    country_us_influence_df['Influence_score'] = country_us_influence_df['US_Term_Count'] / country_us_influence_df['Number of movies']
     country_us_influence_df['log_number_of_movies'] = np.log(country_us_influence_df['Number of movies'])
 
     # Add a 'World_region' column with the geographical region
@@ -188,7 +188,7 @@ def process_data_character():
     df_first_appearance = df_sorted_character.groupby('cluster').first().reset_index()
     
     # Select the relevant columns
-    df_first_appearance = df_first_appearance[['cluster', 'character_actor_freebase_id', 'name_x', 'name_y', 'release_date_x', 'countries']]
+    df_first_appearance = df_first_appearance[['cluster', 'character_actor_freebase_id', 'name', 'original_title', 'release_date_x', 'countries']]
     
     # Extract all the countries where the characters appeared
     all_countries = df_character_influence.groupby('cluster')['countries'].apply(lambda x: list({country for countries_list in x for country in countries_list if isinstance(country, str)})).reset_index()
