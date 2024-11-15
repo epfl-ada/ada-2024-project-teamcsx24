@@ -8,7 +8,7 @@ import networkx as nx
 from itertools import combinations
 
 # importing df
-data_folder = '../../data/cleanData/'
+data_folder = 'data/cleanData/'
 df_characters = pd.read_csv(data_folder + 'characters_cleaned.csv')
 df_movies = movies_df = pd.read_csv(data_folder + 'movies_cleaned.csv')
 
@@ -43,8 +43,8 @@ def numberCountriesPerActor():
 
 # comparisons between single and co prod
 def comparisonSingleCoProd():
-    single_prod = single_prod_df['movies_freebase_id'].nunique()
-    total_movies = merged_df['movies_freebase_id'].nunique()
+    single_prod = single_prod_df['freebase_id'].nunique()
+    total_movies = merged_df['freebase_id'].nunique()
     return ((f'Number of single-production movies : {single_prod}'), (f'Total number of movies : {total_movies}'))
 
 def comparisonActors() :
