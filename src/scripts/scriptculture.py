@@ -109,10 +109,10 @@ def assign_geographical_region(country):         #Geographical clusterisation
 
 def process_data_us_influence():            #Process the data and return the DataFrame useful for studying the influence of countries on each other.
     # Charger les données
-    df_movies = pd.read_csv('../../data/cleanData/movies_cleaned.csv')
-    df_characters = pd.read_csv('../../data/cleanData/characters_cleaned.csv')
-    df_summary = pd.read_csv('../../data/cleanData/summaries_cleaned.csv')
-    df_cluster = pd.read_csv('../../data/cleanData/character_clusters_cleaned.csv')
+    df_movies = pd.read_csv('data/cleanData/movies_cleaned.csv')
+    df_characters = pd.read_csv('data/cleanData/characters_cleaned.csv')
+    df_summary = pd.read_csv('data/cleanData/summaries_cleaned.csv')
+    df_cluster = pd.read_csv('data/cleanData/character_clusters_cleaned.csv')
     
     # Merge DataFrames movies and summaries
     df_movies_merge = pd.merge(df_summary, df_movies, how='inner')
@@ -169,10 +169,10 @@ def process_data_us_influence():            #Process the data and return the Dat
 
 def process_data_character():
     # Load the datasets
-    df_movies = pd.read_csv('../../data/cleanData/movies_cleaned.csv')
-    df_characters = pd.read_csv('../../data/cleanData/characters_cleaned.csv')
-    df_summary = pd.read_csv('../../data/cleanData/summaries_cleaned.csv')
-    df_cluster = pd.read_csv('../../data/cleanData/character_clusters_cleaned.csv')
+    df_movies = pd.read_csv('data/cleanData/movies_cleaned.csv')
+    df_characters = pd.read_csv('data/cleanData/characters_cleaned.csv')
+    df_summary = pd.read_csv('data/cleanData/summaries_cleaned.csv')
+    df_cluster = pd.read_csv('data/cleanData/character_clusters_cleaned.csv')
     
     # Merge the DataFrames df_cluster and df_characters on 'character_actor_freebase_id'
     df_character_cluster = pd.merge(df_cluster, df_characters, on='character_actor_freebase_id', how='inner')

@@ -6,7 +6,7 @@ def loadDataframe(name, path_to_directory):
         df = pd.read_csv(path_to_directory + 'movies_cleaned.csv')
         df['release_date'] = pd.to_datetime(df['release_date'])
         
-        columns_to_convert = ['genres','languages','countries']
+        columns_to_convert = ['genres','languages','countries', 'countries_freebase_id', 'languages_freebase_id', 'genres_freebase_id']
         df[columns_to_convert] = df[columns_to_convert].applymap(eval)
 
         return df

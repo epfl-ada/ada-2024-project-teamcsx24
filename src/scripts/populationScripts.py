@@ -8,7 +8,7 @@ import networkx as nx
 from itertools import combinations
 
 # importing df
-data_folder = '../../data/cleanData/'
+data_folder = 'data/cleanData/'
 df_characters = pd.read_csv(data_folder + 'characters_cleaned.csv')
 df_movies = movies_df = pd.read_csv(data_folder + 'movies_cleaned.csv')
 
@@ -43,14 +43,14 @@ def numberCountriesPerActor():
 
 # comparisons between single and co prod
 def comparisonSingleCoProd():
-    single_prod = single_prod_df['countries_freebase_id'].nunique()
-    total_movies = merged_df['countries_freebase_id'].nunique()
+    single_prod = single_prod_df['freebase_id'].nunique()
+    total_movies = merged_df['freebase_id'].nunique()
     return ((f'Number of single-production movies : {single_prod}'), (f'Total number of movies : {total_movies}'))
 
 def comparisonActors() :
     single_prod = single_prod_df['actor_freebase_id'].nunique()
     total_movies = merged_df['actor_freebase_id'].nunique()
-    return ((f'Number of actors single production : {single_prod}'), (f'Total number of actors : {total_movies}'))
+    return ((f'Number of actors in single production : {single_prod}'), (f'Total number of actors : {total_movies}'))
 
 # create international actor dataframe
 international_actors = number_countries_per_actor[number_countries_per_actor > 1]
@@ -62,7 +62,7 @@ def createInternationalActorDf() :
 def numberCountries():
     number_countries = international_actors_df['countries_freebase_id_x'].nunique()
     number_countries_total = merged_df['countries_freebase_id'].nunique()
-    return (f'{number_countries} countries will be represented in our graph, {number_countries_total} were initially present in the data')
+    return (f'{number_countries} countries will be represented in our graph, 148 were initially present in the data')
 
 
 # graph
