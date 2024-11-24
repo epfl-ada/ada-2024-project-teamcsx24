@@ -1,8 +1,10 @@
+pandas
+numpy
+scipy
 geopandas
 bertopic
 sentence-transformers
 nltk
-matplotlib_venn
 spacy
 transformers
 torch
@@ -10,3 +12,4 @@ networkx
 requests
 seaborn
 matplotlib-venn
+langdetect
