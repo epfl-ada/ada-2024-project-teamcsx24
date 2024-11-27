@@ -201,3 +201,41 @@ def process_data_character():
     df_first_appearance_tot['number_countries'] = df_first_appearance_tot['all_countries'].apply(lambda x: len(x))
     
     return df_first_appearance_tot
+
+def process_data_us_influence_nlp():      #Process the score of each country tha twe get from transformers' NLP method and return the DataFrame useful for studying the influence of countries on each other.
+    # Charger les données
+    df_us_influence_nlp = pd.read_csv('scores.csv')
+
+    df_us_influence_nlp['countries'] = df_us_influence_nlp['countries'].apply(lambda x: ast.literal_eval(x))
+
+    country_sum_score = {}
+
+    for index, row in df_us_influence_nlp.iterrows():
+        count = row['score']
+        countries = row['countries']
+        for country in countries:
+            if country not in country_sum_score :
+                country_sum_score [country] = 0
+            country_sum_score [country] += count
+
+    country_terms_count_df = pd.DataFrame(list(country_sum_score .items()), columns=['Country', 'Sum_us_score'])
+
+    country_movie_count = {}
+
+    for index, row in df_us_influence_nlp.iterrows():
+        countries = row['countries']
+        for country in countries:
+            if country not in country_movie_count:
+                country_movie_count[country] = 1
+            country_movie_count[country] += 1
+
+    country_movie_count_df = pd.DataFrame(list(country_movie_count.items()), columns=['Country', 'Number of movies'])
+
+    # Merge the DataFrames with the number of US terms and the number of movies
+    df_us_influence_nlp = pd.merge(country_terms_count_df, country_movie_count_df)
+
+    # Calculate a ratio of us term and log transformation
+    df_us_influence_nlp['nlp_score'] = df_us_influence_nlp['Sum_us_score'] / df_us_influence_nlp['Number of movies']
+    # Return the processed DataFrame
+    return df_us_influence_nlp
+   
