@@ -113,6 +113,7 @@ def process_data_us_influence():            #Process the data and return the Dat
     df_characters = pd.read_csv('data/cleanData/characters_cleaned.csv')
     df_summary = pd.read_csv('data/cleanData/summaries_cleaned.csv')
     df_cluster = pd.read_csv('data/cleanData/character_clusters_cleaned.csv')
+    df_us_influence_nlp = process_data_us_influence_nlp()
     
     # Merge DataFrames movies and summaries
     df_movies_merge = pd.merge(df_summary, df_movies, how='inner')
@@ -163,12 +164,15 @@ def process_data_us_influence():            #Process the data and return the Dat
 
     country_us_influence_df['World_region'] = country_us_influence_df['Country'].apply(assign_geographical_region)
 
+    country_us_influence_df = pd.merge(country_us_influence_df, df_us_influence_nlp, on='Country', how='inner')
+
     # Return the processed DataFrame
     return country_us_influence_df
 
 
 def process_data_character():
     # Load the datasets
+
     df_movies = pd.read_csv('data/cleanData/movies_cleaned.csv')
     df_characters = pd.read_csv('data/cleanData/characters_cleaned.csv')
     df_summary = pd.read_csv('data/cleanData/summaries_cleaned.csv')
@@ -236,6 +240,7 @@ def process_data_us_influence_nlp():      #Process the score of each country tha
 
     # Calculate a ratio of us term and log transformation
     df_us_influence_nlp['nlp_score'] = df_us_influence_nlp['Sum_us_score'] / df_us_influence_nlp['Number of movies']
+    df_us_influence_nlp.drop(columns=['Number of movies','Sum_us_score'], inplace=True)
     # Return the processed DataFrame
     return df_us_influence_nlp
    
