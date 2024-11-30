@@ -54,8 +54,11 @@ def transformCountryNameGpd(countries_freebase_id):
 # Attach a world region to each country
 def attachWorldRegion(country):
     # Load countries dictionnary
-    with open('data/freebaseIdDictionnaries/regions', 'r') as file:
+    with open('../../data/freebaseIdDictionnaries/regions', 'r') as file:
         countries_regions = json.load(file)
+    
+    # Convert country to string
+    country = str(country)
     
     # Attach a world region to each country
     world_region = countries_regions[country]
