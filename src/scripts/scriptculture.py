@@ -1,6 +1,8 @@
 import pandas as pd
 import ast
 import numpy as np
+import generalUtils
+import sys
 
 def count_us_terms(summary):       #Example of US related terms
     us_terms = [
@@ -109,7 +111,13 @@ def assign_geographical_region(country):         #Geographical clusterisation
 
 def process_data_us_influence():            #Process the data and return the DataFrame useful for studying the influence of countries on each other.
     # Charger les données
+    
     df_movies = pd.read_csv('data/cleanData/movies_cleaned.csv')
+    df_movies['countries'] = df_movies['countries'].apply(lambda x: ast.literal_eval(x))
+    df_movies['countries_freebase_id'] = df_movies['countries_freebase_id'].apply(lambda x: ast.literal_eval(x))
+    from generalUtils import transformCountryNameGpd
+    df_movies['countries'] = df_movies['countries_freebase_id'].apply(transformCountryNameGpd)
+
     df_characters = pd.read_csv('data/cleanData/characters_cleaned.csv')
     df_summary = pd.read_csv('data/cleanData/summaries_cleaned.csv')
     df_cluster = pd.read_csv('data/cleanData/character_clusters_cleaned.csv')
@@ -119,7 +127,6 @@ def process_data_us_influence():            #Process the data and return the Dat
     df_movies_merge = pd.merge(df_summary, df_movies, how='inner')
 
     # Convert country data to a list
-    df_movies_merge['countries'] = df_movies_merge['countries'].apply(lambda x: ast.literal_eval(x))
 
     # Create a 'word_list' column containing words from the summary
     df_movies_merge['word_list'] = df_movies_merge['summary'].apply(lambda x: x.split())
@@ -206,8 +213,8 @@ def process_data_character():
     
     return df_first_appearance_tot
 
-def process_data_us_influence_nlp():      #Process the score of each country tha twe get from transformers' NLP method and return the DataFrame useful for studying the influence of countries on each other.
-    # Charger les données
+def process_data_us_influence_nlp():      #Process the data and return the DataFrame useful for studying the influence of countries on each other.
+    
     df_us_influence_nlp = pd.read_csv('scores.csv')
 
     df_us_influence_nlp['countries'] = df_us_influence_nlp['countries'].apply(lambda x: ast.literal_eval(x))
@@ -244,3 +251,76 @@ def process_data_us_influence_nlp():      #Process the score of each country tha
     # Return the processed DataFrame
     return df_us_influence_nlp
    
+
+def process_character_nlp():  #Process the data and return the DataFrame useful for studying the influence of countries on each other considering characters (influence get by NLP methods)
+    
+    # Here, we load the data and we make a few transformations    
+    df_movies = pd.read_csv('data/cleanData/movies_cleaned.csv')
+    df_characters = pd.read_csv('data/cleanData/characters_cleaned.csv')
+    df_summary = pd.read_csv('data/cleanData/summaries_cleaned.csv')  
+    df_cluster = pd.read_csv('data/cleanData/character_clusters_cleaned.csv')
+    df_character_nlp = pd.read_csv('character_countries.csv')
+    
+    # We get a dataframe with the NLP score and best country for each character
+    df_character_influence_nlp = pd.merge(process_data_character(), df_character_nlp, on='Character', how='inner')
+
+    # We get another dataframe to get some columns of interest (all the release years of the movies for eg, which will be useful for our analysis)
+    df_character_cluster = pd.merge(df_cluster, df_characters, on='character_actor_freebase_id', how='inner')
+    
+    df_character_influence = pd.merge(df_character_cluster, df_movies, on='wiki_id', how='inner')
+    
+    df_character_influence['countries'] = df_character_influence['countries'].apply(
+        lambda x: ast.literal_eval(x) if isinstance(x, str) and x.startswith('[') else x
+    )
+    
+    # We convert the release date to datetime and extract the release year
+    df_character_influence['release_date_x'] = pd.to_datetime(df_character_influence['release_date_x'])
+    df_character_influence['release_year'] = df_character_influence['release_date_x'].dt.year
+    
+    # Select the relevant columns
+    df_character_influence = df_character_influence[['cluster', 'release_year', 'original_title', 'countries']]
+    
+    # Merge the two dataframes
+    df_character_test = pd.merge(
+        df_character_influence_nlp, 
+        df_character_influence, 
+        left_on='Character', 
+        right_on='cluster', 
+        how='inner'
+    )
+    
+    # Select the relevant columns
+    df_character_test = df_character_test[['original_title', 'Character', 'Best_Country', 'number_countries', 'release_year', 'countries']]
+
+    df_character_test = df_character_test.sort_values(by=['Character', 'release_year'])
+    
+    #Here, we create a function that allows us to track the appearance of characters in different countries
+
+    # Initialize a column for new countries that will contain the cumulate number of counties in which the character appears
+    df_character_test['new_countries'] = 0
+    
+    # Dictionary to track already visited countries by character
+    visited_countries = {}
+    
+    # Iterate over each row to compute new countries
+    for idx, row in df_character_test.iterrows():
+        character = row['Character']
+        countries = set(row['countries'])  
+        best_country = row['Best_Country']
+        
+        # Remove Best_Country from the countries list, we want influence poitn so we don't want to count the influence of a country on itself
+        if best_country in countries:
+            countries.remove(best_country)     
+        
+        # Initialize the character in the dictionary if not present
+        if character not in visited_countries:
+            visited_countries[character] = set()
+        
+        # Compute the new countries for this character
+        new_countries = countries - visited_countries[character]
+        df_character_test.at[idx, 'new_countries'] = len(new_countries)  # Store the count of new countries
+        
+        # Update the visited countries for this character
+        visited_countries[character].update(countries)
+    
+    return df_character_test
