@@ -5,6 +5,7 @@
 # Importing libraries
 import matplotlib.pyplot as plt
 from matplotlib_venn import venn2
+import json
 
 # Function to compare the intersection between two DataFrames
 def intersectionId(df1, df2, name1, name2, id_column='id'):
@@ -33,3 +34,34 @@ def intersectionId(df1, df2, name1, name2, id_column='id'):
     
     plt.title("Intersection between " + name1 + " and " + name2)
     plt.show()
+
+# Function to transform country names to geopandas names
+def transformCountryNameGpd(countries_freebase_id):
+    # Load countries dictionnary
+    with open('../../data/freebaseIdDictionnaries/countries_geo', 'r') as file:
+        countries_dict = json.load(file)
+    
+    # Transform countries names to geopandas names using the freebase id
+    countries_name = []
+    n = len(countries_freebase_id)
+    for i in range(n):
+        country_freebase_id = countries_freebase_id[i]
+        country_name = countries_dict[country_freebase_id]
+        countries_name.append(country_name)
+    
+    return countries_name
+
+# Attach a world region to each country
+def attachWorldRegion(country):
+    # Load countries dictionnary
+    with open('../../data/freebaseIdDictionnaries/regions', 'r') as file:
+        countries_regions = json.load(file)
+    
+    # Convert country to string
+    country = str(country)
+    
+    # Attach a world region to each country
+    world_region = countries_regions[country]
+    
+    return world_region
+
