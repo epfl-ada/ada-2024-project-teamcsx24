@@ -164,3 +164,4 @@ src/models/topic_model
 src/models/embeddings.npy
 src/models/topic_model_min_cluster_size_50
 src/models/topic_model_merged
+data/cultureData/df_movies_with_topics.csv
