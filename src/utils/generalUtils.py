@@ -57,6 +57,9 @@ def attachWorldRegion(country):
     with open('../../data/freebaseIdDictionnaries/regions', 'r') as file:
         countries_regions = json.load(file)
     
+    # Convert country to string
+    country = str(country)
+    
     # Attach a world region to each country
     world_region = countries_regions[country]
     
