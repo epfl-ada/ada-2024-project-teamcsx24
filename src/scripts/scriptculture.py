@@ -215,7 +215,7 @@ def process_data_character():
 
 def process_data_us_influence_nlp():      #Process the data and return the DataFrame useful for studying the influence of countries on each other.
     
-    df_us_influence_nlp = pd.read_csv('scores.csv')
+    df_us_influence_nlp = pd.read_csv('data/cleanData/scores.csv')
 
     df_us_influence_nlp['countries'] = df_us_influence_nlp['countries'].apply(lambda x: ast.literal_eval(x))
 
@@ -259,7 +259,7 @@ def process_character_nlp():  #Process the data and return the DataFrame useful 
     df_characters = pd.read_csv('data/cleanData/characters_cleaned.csv')
     df_summary = pd.read_csv('data/cleanData/summaries_cleaned.csv')  
     df_cluster = pd.read_csv('data/cleanData/character_clusters_cleaned.csv')
-    df_character_nlp = pd.read_csv('character_countries.csv')
+    df_character_nlp = pd.read_csv('data/cleanData/character_countries.csv')
     
     # We get a dataframe with the NLP score and best country for each character
     df_character_influence_nlp = pd.merge(process_data_character(), df_character_nlp, on='Character', how='inner')
@@ -317,10 +317,49 @@ def process_character_nlp():  #Process the data and return the DataFrame useful 
             visited_countries[character] = set()
         
         # Compute the new countries for this character
-        new_countries = countries - visited_countries[character]
+        new_countries = countries - visited_countries[character]   # Get only the countries in which the character didn't already appeared
         df_character_test.at[idx, 'new_countries'] = len(new_countries)  # Store the count of new countries
         
         # Update the visited countries for this character
         visited_countries[character].update(countries)
     
     return df_character_test
+
+def process_top_characters(): 
+    df_character_nlp = pd.read_csv('data/cleanData/character_countries.csv')
+    df_character_influence = process_data_character()
+
+    df_top_characters = pd.merge(df_character_influence, df_character_nlp, on='Character', how='inner')
+    df_top_characters = df_top_characters[['Character','first_movie_name','Best_Country','number_countries','all_countries','first_apperance_date']]
+    return df_top_characters
+
+
+def create_cumulative_df_2(df):     #Create a temporal cumulative DataFrame for the number of new countries in which characters appear, that is the one will use to plot the number of character points of influence over time.
+    
+    # Create a list of all years from 1910 to 2010
+    years = list(range(1910, 2011))
+
+    # Create an empty list to store the new rows for the cumulative DataFrame
+    rows = []
+
+    # Loop through each unique country in the 'Best_Country' column
+    for country in df['Best_Country'].unique():
+        # Filter the data for each country
+        country_data = df[df['Best_Country'] == country]
+        
+        # Initialize a cumulative total to 0
+        cumulative_total = 0
+        
+        # Loop through each year from 1910 to 2010
+        for year in years:
+            # If the year exists for this country, add the number of new countries produced that year
+            if year in country_data['release_year'].values:
+                cumulative_total += country_data[country_data['release_year'] == year]['new_countries'].sum()
+            
+            # Append the row to the list with the year, country, and cumulative total
+            rows.append({'release_year': year, 'Best_Country': country, 'tot': cumulative_total})
+    
+    # Convert the list of rows into a DataFrame
+    cumulative_df = pd.DataFrame(rows)
+    
+    return cumulative_df
