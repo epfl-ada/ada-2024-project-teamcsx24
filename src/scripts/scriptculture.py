@@ -164,8 +164,8 @@ def process_data_us_influence():            #Process the data and return the Dat
     country_us_influence_df = pd.merge(country_terms_count_df, country_movie_count_df)
 
     # Calculate a ratio of us term and log transformation
-    country_us_influence_df['Influence_score'] = country_us_influence_df['US_Term_Count'] / country_us_influence_df['Number of movies']
-    country_us_influence_df['log_number_of_movies'] = np.log(country_us_influence_df['Number of movies'])
+    country_us_influence_df['Naïve_Influence_score'] = country_us_influence_df['US_Term_Count'] / country_us_influence_df['Number of movies']
+    country_us_influence_df['log Number of movies'] = np.log(country_us_influence_df['Number of movies'])
 
     # Add a 'World_region' column with the geographical region
 
@@ -209,11 +209,11 @@ def process_data_character():
     df_first_appearance_tot.columns = ['Character', 'character_actor_freebase_id', 'actor_name', 'first_movie_name', 'first_apperance_date', 'origin_country', 'all_countries']
     
     # Add a column with the number of countries in which the character appeared
-    df_first_appearance_tot['number_countries'] = df_first_appearance_tot['all_countries'].apply(lambda x: len(x))
+    df_first_appearance_tot['number_countries_score'] = df_first_appearance_tot['all_countries'].apply(lambda x: len(x))
     
     return df_first_appearance_tot
 
-def process_data_us_influence_nlp():      #Process the data and return the DataFrame useful for studying the influence of countries on each other.
+def process_data_us_influence_nlp():      #Process the data and return the DataFrame useful for studying the influence of US on other countries.
     
     df_us_influence_nlp = pd.read_csv('data/cleanData/scores.csv')
 
@@ -246,7 +246,7 @@ def process_data_us_influence_nlp():      #Process the data and return the DataF
     df_us_influence_nlp = pd.merge(country_terms_count_df, country_movie_count_df)
 
     # Calculate a ratio of us term and log transformation
-    df_us_influence_nlp['nlp_score'] = df_us_influence_nlp['Sum_us_score'] / df_us_influence_nlp['Number of movies']
+    df_us_influence_nlp['NLP US Influence Score'] = df_us_influence_nlp['Sum_us_score'] / df_us_influence_nlp['Number of movies']
     df_us_influence_nlp.drop(columns=['Number of movies','Sum_us_score'], inplace=True)
     # Return the processed DataFrame
     return df_us_influence_nlp
@@ -290,7 +290,7 @@ def process_character_nlp():  #Process the data and return the DataFrame useful 
     )
     
     # Select the relevant columns
-    df_character_test = df_character_test[['original_title', 'Character', 'Best_Country', 'number_countries', 'release_year', 'countries']]
+    df_character_test = df_character_test[['original_title', 'Character', 'Best_Country', 'number_countries_score', 'release_year', 'countries']]
 
     df_character_test = df_character_test.sort_values(by=['Character', 'release_year'])
     
@@ -325,12 +325,12 @@ def process_character_nlp():  #Process the data and return the DataFrame useful 
     
     return df_character_test
 
-def process_top_characters(): 
+def process_top_characters():      #Process the data and return a dataframe useful to study the most influential characters
     df_character_nlp = pd.read_csv('data/cleanData/character_countries.csv')
     df_character_influence = process_data_character()
 
     df_top_characters = pd.merge(df_character_influence, df_character_nlp, on='Character', how='inner')
-    df_top_characters = df_top_characters[['Character','first_movie_name','Best_Country','number_countries','all_countries','first_apperance_date']]
+    df_top_characters = df_top_characters[['Character','first_movie_name','Best_Country','number_countries_score','all_countries','first_apperance_date']]
     return df_top_characters
 
 
