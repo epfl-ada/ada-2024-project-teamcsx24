@@ -80,6 +80,8 @@ df_genres_countries_exploded['region'] = df_genres_countries_exploded['countries
 
 df_genres_countries_exploded['year'] = pd.to_datetime(df_genres_countries_exploded['release_date']).dt.year
 
+df_genres_countries_exploded.drop(columns=['runtime','revenue','languages','countries_freebase_id','languages_freebase_id','genres_freebase_id'], inplace=True)
+
 # Save the data
 df_genres_countries_exploded.to_csv('././data/cultureData/df_genres_countries_exploded.csv', index=False)
 
@@ -92,16 +94,20 @@ print('Saving the data...')
 df1.to_csv('././data/cultureData/df1.csv', index=False)
 df2.to_csv('././data/cultureData/df2.csv', index=False)
 
-print('Genre analysis data ready!')
+print('\033[1m' + 'Genre analysis data ready!' + '\033[0m')
 
 # ------------------- Prepare the data for the topic analysis -------------------
 print('Preparing the data for the topic analysis...')
 
-df = pd.read_csv('././data/topicModelData/summaries_with_topics.csv')
+df = pd.read_csv('././data/cultureData/topicModelData/summaries_with_topics.csv')
 df = df[df['topic'] != -1]
 
 df = df.merge(df_genres_countries_exploded, on='wiki_id')
 
+df = df[['wiki_id','topic_name','release_date','countries','region']]
+
 # Save data
 print('Saving the data...')
 df.to_csv('././data/cultureData/df_movies_with_topics.csv', index=False)
+
+print('\033[1m' + 'Topic analysis data ready!' + '\033[0m')
