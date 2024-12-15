@@ -214,6 +214,7 @@ def averageEthnicityPerYear(df):
         title="Evolution of the number of ethnicities per movie",
         xaxis_title="Years",
         yaxis_title="Average number of ethnicities",
+        title_x = 0.5,
         width=700, 
         height=400,  
     )
