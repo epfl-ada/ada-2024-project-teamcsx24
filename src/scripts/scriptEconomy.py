@@ -190,25 +190,25 @@ def coprod_couple_countries_yearly():
     return df_movies_eco_coprod_country_country
 
 
-#Function to create a dataframe with couple of countries and the number of co-productions between them per period of 5 years
+#Function to create a dataframe with couple of countries and the number of co-productions between them per period of 10 years
 
 def coprod_couple_countries_period():
 
     df_movies_eco_coprod_country_country = coprod_couple_countries_yearly() # Create a dataframe with couple of countries and the number of co-productions between them yearly
     
-    df_movies_eco_coprod_country_country_5 = df_movies_eco_coprod_country_country # Copy the dataframe
+    df_movies_eco_coprod_country_country_10 = df_movies_eco_coprod_country_country # Copy the dataframe
 
     # -- Process the data -- #
 
-    df_movies_eco_coprod_country_country_5["period"] = df_movies_eco_coprod_country_country_5["year"]//5*5 # Add the period of 5 years
+    df_movies_eco_coprod_country_country_10["period"] = (df_movies_eco_coprod_country_country_10["year"] // 10) * 10 # Add the period of 10 years
 
-    df_movies_eco_coprod_country_country_5 = df_movies_eco_coprod_country_country_5.groupby(["period", "country_1", "country_2"])["co_production_count"].sum().reset_index() # Count the number of co-productions per period of 5 years and per couple of countries
+    df_movies_eco_coprod_country_country_10 = df_movies_eco_coprod_country_country_10.groupby(["period", "country_1", "country_2"])["co_production_count"].sum().reset_index() # Count the number of co-productions per period of 10 years and per couple of countries
 
     # -- Return processed data -- #
 
-    return df_movies_eco_coprod_country_country_5    
+    return df_movies_eco_coprod_country_country_10    
 
-#Function to create a dataframe with the revenue of movies per period of 5 years
+#Function to create a dataframe with the revenue of movies per period of 10 years
 
 def revenue_period():
 
@@ -216,26 +216,26 @@ def revenue_period():
 
     # -- Process the data -- #
 
-    # Create period based on 5-year intervals
-    df_movies_eco_exploded_countries['period'] = (df_movies_eco_exploded_countries['year'] // 5) * 5 # Add the period of 5 years
+    # Create period based on 10-year intervals
+    df_movies_eco_exploded_countries['period'] = (df_movies_eco_exploded_countries['year'] // 10) * 10 # Add the period of 10 years
 
     # Group by Year and Country, sum revenue
-    df_movies_eco_exploded_countries_agg_5 = df_movies_eco_exploded_countries.groupby(["period", "countries"])["revenue"].sum().reset_index() # Group by period and country, sum revenue
+    df_movies_eco_exploded_countries_agg_10 = df_movies_eco_exploded_countries.groupby(["period", "countries"])["revenue"].sum().reset_index() # Group by period and country, sum revenue
 
     # Calculate log of revenue over the period
-    df_movies_eco_exploded_countries_agg_5['log_revenue_period'] = df_movies_eco_exploded_countries_agg_5["revenue"].apply(lambda x: np.log(x) if x > 0 else 0) # Calculate the log of the revenue
+    df_movies_eco_exploded_countries_agg_10['log_revenue_period'] = df_movies_eco_exploded_countries_agg_10["revenue"].apply(lambda x: np.log(x) if x > 0 else 0) # Calculate the log of the revenue
 
     # Convert year to integer
-    df_movies_eco_exploded_countries_agg_5['period'] = df_movies_eco_exploded_countries_agg_5['period'].astype(int)
+    df_movies_eco_exploded_countries_agg_10['period'] = df_movies_eco_exploded_countries_agg_10['period'].astype(int)
 
     # -- Data Cleaning for the plot -- #
 
-    df_movies_eco_exploded_countries_agg_5 = df_movies_eco_exploded_countries_agg_5[df_movies_eco_exploded_countries_agg_5.countries != "Republic of Serbia"]
+    df_movies_eco_exploded_countries_agg_10 = df_movies_eco_exploded_countries_agg_10[df_movies_eco_exploded_countries_agg_10.countries != "Republic of Serbia"]
 
-    df_movies_eco_exploded_countries_agg_5 = df_movies_eco_exploded_countries_agg_5[df_movies_eco_exploded_countries_agg_5.countries != "The Bahamas"]
+    df_movies_eco_exploded_countries_agg_10 = df_movies_eco_exploded_countries_agg_10[df_movies_eco_exploded_countries_agg_10.countries != "The Bahamas"]
 
-    df_movies_eco_exploded_countries_agg_5 = df_movies_eco_exploded_countries_agg_5[df_movies_eco_exploded_countries_agg_5.countries != "Bosnia and Herzegovina"]
+    df_movies_eco_exploded_countries_agg_10 = df_movies_eco_exploded_countries_agg_10[df_movies_eco_exploded_countries_agg_10.countries != "Bosnia and Herzegovina"]
 
     # -- Return processed data -- #
 
-    return df_movies_eco_exploded_countries_agg_5
+    return df_movies_eco_exploded_countries_agg_10
