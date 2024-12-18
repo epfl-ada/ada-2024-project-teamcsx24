@@ -84,7 +84,7 @@ For each part of our analysis, we want to compare our results to actual informat
 
 ## Organization Within the Team
 
-- **Pauline:** Part III  
+- **Pauline:** Part III
 - **Arnaud:** Part II and overall support  
 - **Aurélien:** Part I  
 - **Blaise:** Part IV and Website creation  
