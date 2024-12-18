@@ -52,7 +52,7 @@ def getCountry(ethnicity):
 
 
 def createEthicitiesDf():
-    df_ethnicities = loadDataframe('characters', path_to_directory)
+    df_ethnicities = loadDataframe('characters', './data/cleanData/')
     df_ethnicities = df_ethnicities.dropna(subset=('ethnicity_freebase_id', 'release_date'))
     df_ethnicities['release_year'] = df_ethnicities['release_date'].apply(getReleaseYear)
 
