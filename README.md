@@ -130,10 +130,16 @@ The directory structure of new project looks like this:
 
 ```
 ├── data                        <- Project data files
+│   ├── additionalData          <- Contains all the additional Dataset
+│   ├── cleanData               <- Processed data used in the analysis
+│   ├── cultureData             <- Prepares dataframes for cultural analysis
+│   ├── freebaseIdDictionnaries     <- Contains dictionnaries (freebaseId, world region, actors...)
+│   ├── map                     <- Contains geopanda data
+│   ├── MovieSummaries          <- Raw data
 │
 ├── src                         <- Source code
-│   ├── data                            <- Data directory
-│   ├── models                          <- Model directory
+│   ├── data                            <- Contains the work on data processing
+│   ├── models                          <- Model directory (Models used in the topic modeling analysis and the NLP models)
 │   ├── utils                           <- Utility directory
 │   ├── scripts                         <- Shell scripts
 │
