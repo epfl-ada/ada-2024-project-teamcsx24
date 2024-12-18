@@ -38,7 +38,7 @@ def intersectionId(df1, df2, name1, name2, id_column='id'):
 # Function to transform country names to geopandas names
 def transformCountryNameGpd(countries_freebase_id):
     # Load countries dictionnary
-    with open('../../data/freebaseIdDictionnaries/countries_geo', 'r') as file:
+    with open('data/freebaseIdDictionnaries/countries_geo', 'r') as file:
         countries_dict = json.load(file)
     
     # Transform countries names to geopandas names using the freebase id
