@@ -211,11 +211,14 @@ def process_data_character():
     # Add a column with the number of countries in which the character appeared
     df_first_appearance_tot['number_countries_score'] = df_first_appearance_tot['all_countries'].apply(lambda x: len(x))
     
+    # Remove characters with no origin country
+    df_first_appearance_tot = df_first_appearance_tot[df_first_appearance_tot['origin_country'].apply(lambda x: len(x) > 0)]
+    
     return df_first_appearance_tot
 
 def process_data_us_influence_nlp():      #Process the data and return the DataFrame useful for studying the influence of US on other countries.
     
-    df_us_influence_nlp = pd.read_csv('data/cleanData/scores.csv')
+    df_us_influence_nlp = pd.read_csv('data/cultureData/scores.csv')
 
     df_us_influence_nlp['countries'] = df_us_influence_nlp['countries'].apply(lambda x: ast.literal_eval(x))
 
@@ -259,7 +262,7 @@ def process_character_nlp():  #Process the data and return the DataFrame useful 
     df_characters = pd.read_csv('data/cleanData/characters_cleaned.csv')
     df_summary = pd.read_csv('data/cleanData/summaries_cleaned.csv')  
     df_cluster = pd.read_csv('data/cleanData/character_clusters_cleaned.csv')
-    df_character_nlp = pd.read_csv('data/cleanData/character_countries.csv')
+    df_character_nlp = pd.read_csv('data/cultureData/character_countries.csv')
     
     # We get a dataframe with the NLP score and best country for each character
     df_character_influence_nlp = pd.merge(process_data_character(), df_character_nlp, on='Character', how='inner')
@@ -326,7 +329,7 @@ def process_character_nlp():  #Process the data and return the DataFrame useful 
     return df_character_test
 
 def process_top_characters():      #Process the data and return a dataframe useful to study the most influential characters
-    df_character_nlp = pd.read_csv('data/cleanData/character_countries.csv')
+    df_character_nlp = pd.read_csv('data/cultureData/character_countries.csv')
     df_character_influence = process_data_character()
 
     df_top_characters = pd.merge(df_character_influence, df_character_nlp, on='Character', how='inner')
