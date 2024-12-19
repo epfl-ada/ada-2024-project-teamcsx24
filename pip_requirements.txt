@@ -14,3 +14,6 @@ requests
 seaborn
 matplotlib-venn
 langdetect
+nbformat>=4.2.0
+openpyxl
+statsmodels
