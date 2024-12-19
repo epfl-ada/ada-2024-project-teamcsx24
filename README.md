@@ -12,8 +12,7 @@ Our project, "From local production to global screens: How the film industry ref
 
 1. **Economic Globalization**
    - Is the movie industry representative of the economic aspect of globalization? For example, how did the number of movie co-productions between countries evolve? 
-   - What is the impact of an international co-production on the budget allocated to each movie? 
-   - How does the movie industry highlight the globalization of culture?  
+   - What is the impact of an international co-production on the budget allocated to each movie?  
 
 2. **Cultural Globalization**
    - Can we see a uniformization of the culture through the evolution of the genres and topics of the movies that are produced?
@@ -109,18 +108,15 @@ git clone <project link>
 cd <project repo>
 
 # [OPTIONAL] create conda environment
-conda create -n <env_name> python=3.11 or ...
+conda create -n <env_name> python=3.11
 conda activate <env_name>
 
 
-# install requirements
+# install requirements  (Proposed at the beginning of the result notebook)
 pip install -r pip_requirements.txt
 ```
 
 
-
-### How to use the library
-Tell us how the code is arranged, any explanations goes here.
 
 
 
@@ -143,7 +139,6 @@ The directory structure of new project looks like this:
 │   ├── utils                           <- Utility directory
 │   ├── scripts                         <- Shell scripts
 │
-├── tests                       <- Tests of any kind
 │
 ├── results.ipynb               <- a well-structured notebook showing the results
 │
